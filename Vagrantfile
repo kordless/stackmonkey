@@ -25,7 +25,7 @@ end
 
 # Providers were added on Vagrant >= 1.1.0
 Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
-  config.vm.network "forwarded_port", guest: 4443, host: 4443
+  config.vm.network "forwarded_port", guest: 443, host: 4443
   config.vm.provider :virtualbox do |vb|
     config.vm.box = "precise64"
     config.vm.box_url = "http://files.vagrantup.com/precise64.box"
