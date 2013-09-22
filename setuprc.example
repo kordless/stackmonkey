@@ -1,0 +1,11 @@
+export NUMBER_NODES=3
+export NODE_1_HOSTNAME=nero
+export NODE_1_IP=10.0.1.73
+export NODE_2_HOSTNAME=spartacus
+export NODE_2_IP=10.0.1.93
+export NODE_3_HOSTNAME=invictus
+export NODE_3_IP=10.0.1.94
+export ROOT_PASSWD=32f2adcf2a0ec534ce1241948b178d7a
+export PUBLIC_NETWORK=10.0.1.0
+export PRIVATE_NETWORK=10.0.55.0
+export BRIDGE_INTERFACE=eth0
