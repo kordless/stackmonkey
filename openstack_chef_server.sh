@@ -66,7 +66,7 @@ CHEF_UNIX_USER=${CHEF_UNIX_USER:-root}
 # due to http://tickets.opscode.com/browse/CHEF-3849 CHEF_FE_PORT is not used yet
 CHEF_FE_PORT=${CHEF_FE_PORT:-80}
 CHEF_FE_SSL_PORT=${CHEF_FE_SSL_PORT:-443}
-CHEF_URL=${CHEF_URL:-https://${MY_IP}:${CHEF_FE_SSL_PORT}}
+CHEF_URL=${CHEF_URL:-https://${MY_IP}}
 
 if [ ! -e "/etc/chef-server/chef-server.rb" ]; then
   # defaults if not set
