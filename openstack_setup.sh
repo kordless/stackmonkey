@@ -58,10 +58,10 @@ for (( x=1; x<=$num_nodes; x++ ))
   do
     read -p "Enter a short hostname for node #"$x": "
     echo "export NODE_"$x"_HOSTNAME="$REPLY >> setuprc
-
+    NODE=$REPLY
     while [ 1 ]
     do
-      read -p "Enter the IP address for node #"$x" ($REPLY): "
+      read -p "Enter the IP address for node #"$x" ($NODE): "
       if valid_ip $REPLY
       then
         echo "export NODE_"$x"_IP="$REPLY >> setuprc
