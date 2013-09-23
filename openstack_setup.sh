@@ -40,9 +40,6 @@ if [ -z "$SERVER_IP" ]; then
   exit;
 fi
 
-# chef server IP
-read -p "Enter the IP address to assign to the Chef Server: " -r
-
 # single or multi?
 echo;
 read -p "How many total nodes in this install? " -r
@@ -91,6 +88,7 @@ then
   echo $SERVER_IP" 443 "$SERVER_IP" 4443" > /etc/rinetd.conf
 else
   # expecting apache server to be on this box
+  echo;
   echo "#############################################################################################################"
   echo;
   echo "You are running the Vagrant Chef Server on the first node.  This script will add a new IP address to the node" 
@@ -107,7 +105,8 @@ else
     if valid_ip $REPLY
     then
       echo $REPLY" 443 "$REPLY" 4443" > /etc/rinetd.conf
-      echo "ifconfig "$internetnic":0 "$REPLY" up" >> /etc/rc.local
+      echo "ifconfig "$internetnic":0 "$REPLY" up" >> /etc/init.d/chefserver-ip
+      ln -s /etc/init.d/chefserver-ip /etc/rc3.d/S20chefserver-ip
       ifconfig $internetnic:0 $REPLY up
       break
     else
@@ -154,22 +153,6 @@ echo "export BRIDGE_INTERFACE=eth0" >> setuprc
 
 # source that sucker, again
 . ./setuprc
-
-# patch the apache port
-  echo;
-  echo "#############################################################################################################"
-  echo;
-  echo "Found an existing /etc/apache2/ports.conf file.  If you have Apache installed on this machine, this will cause" 
-  echo "issues accessing the Vagrant Chef server.  If you are re-running this script, you may ignore this error."
-  echo;
-  echo "#############################################################################################################"
-fi
-
-# test to see if we are running two seperate IPs 
-if [ $CHEF_SERVER_IP != $SERVER_IP ]
-then
-  echo "yup";
-fi
 
 # say a setup howdy to user
 echo;
