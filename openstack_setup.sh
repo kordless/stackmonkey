@@ -15,12 +15,14 @@ then
 fi
 
 # grab our IP 
-read -p "Enter the device name for the primary NIC connected to the Internets (eth0, etc.) : " internetnic
+read -p "Enter the alias for the interface to be used for the Vagrant instance (eth0:0, etc.) : " internetnic
 CHEF_SERVER_IP=$(/sbin/ifconfig $internetnic| sed -n 's/.*inet *addr:\([0-9\.]*\).*/\1/p')
 if [ -z "$CHEF_SERVER_IP" ]; then
   echo "No IP found on that interface!  Edit the 'openstack_setup.sh' file and add it.";
   exit;
 fi
+echo $CHEF_SERVER_IP;
+exit;
 # uncomment this if you run into issues
 # CHEF_SERVER_IP=10.0.1.100
 echo "export CHEF_SERVER_IP="$CHEF_SERVER_IP > setuprc
@@ -67,6 +69,12 @@ echo "export BRIDGE_INTERFACE=eth0" >> setuprc
 
 # source that sucker, again
 . ./setuprc
+
+# install rinetd on host
+apt-get -y install rinetd
+echo "10.0.2.15 443 10.0.2.15 4443" > /etc/rinetd.conf
+service rinetd restart
+
 
 echo;
 echo "#############################################################################################################"
