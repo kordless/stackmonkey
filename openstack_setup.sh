@@ -46,7 +46,7 @@ read -p "How many total nodes in this install? " -r
 if [ $REPLY -eq $REPLY 2>/dev/null ]
 then
   num_nodes=$REPLY
-  echo "export NUMBER_NODES="$REPLY >> setuprc
+  echo "export NUMBER_NODES="$REPLY > setuprc
 else
   echo;
   echo "You need to enter an integer value."
@@ -84,16 +84,16 @@ apt-get -y install rinetd
 if [ $SERVER_IP != $NODE_1_IP ]
 then
   # not expecting apache server on this box
-  echo "export CHEF_SERVER_IP="$SERVER_IP > setuprc
   echo $SERVER_IP" 443 "$SERVER_IP" 4443" > /etc/rinetd.conf
+  echo "export CHEF_SERVER_IP="$SERVER_IP > setuprc
 else
   # expecting apache server to be on this box
   echo;
   echo "#############################################################################################################"
   echo;
   echo "You are running the Vagrant Chef Server on the first node.  This script will add a new IP address to the node" 
-  echo "using an alias for the "$internetnic" interface.  The alias will be added to the /etc/rc.local file to ensure"
-  echo "it exists after a reboot."
+  echo "using an alias for the "$internetnic" interface.  This script  will add a command to the /etc/rc.local file"
+  echo "to bring up the interface after a reboot.  The existing rc.local file will be moved to rc.local.bak."
   echo;
   echo "#############################################################################################################"
   echo;
@@ -104,9 +104,11 @@ else
     read -p "Enter the IP address to assign to the Chef Server: " -r
     if valid_ip $REPLY
     then
+      echo "export CHEF_SERVER_IP="$SERVER_IP >> setuprc
       echo $REPLY" 443 "$REPLY" 4443" > /etc/rinetd.conf
-      echo "ifconfig "$internetnic":0 "$REPLY" up" >> /etc/init.d/chefserver-ip
-      ln -s /etc/init.d/chefserver-ip /etc/rc3.d/S20chefserver-ip
+      mv /etc/rc.local /etc/rc.local.bak
+      echo "ifconfig "$internetnic":0 "$REPLY" up" > /etc/rc.local
+      echo "exit 0" >> /etc/rc.local
       ifconfig $internetnic:0 $REPLY up
       break
     else
